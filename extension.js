@@ -1,4 +1,4 @@
-// 발췌기 v0.9.29
+// 발췌기 v0.9.30
 // 메시지 아래 가위 아이콘 → 그 턴을 꾸며서 이미지로 저장
 // 이미지 변환: html-to-image 1.11.11 (MIT, https://github.com/bubkoo/html-to-image) 내장
 
@@ -1357,7 +1357,9 @@ function toParas(root) {
   return out;
 }
 
-const QUOTE_RE = /“[^“”]*”|"[^"\n]*"|「[^」]*」|『[^』]*』/g;
+// 대사로 칠할 따옴표: 둥근·곧은·전각 큰따옴표, 짝 안 맞게 쓴 둥근 따옴표(“…“ / ”…”), 〝…〞, 낫표.
+// 작은따옴표는 don't 같은 글자와 헷갈려서 넣지 않는다.
+const QUOTE_RE = /“[^“”]*”|“[^“”\n]*“|”[^“”\n]*”|"[^"\n]*"|＂[^＂\n]*＂|〝[^〝〞〟]*[〞〟]|「[^」]*」|『[^』]*』/g;
 function markDialogue(root) {
   const tw = document.createTreeWalker(root, NodeFilter.SHOW_TEXT);
   const nodes = [];
@@ -3326,7 +3328,7 @@ marinara.onCleanup(() => {
   document.querySelectorAll(".mxc-act").forEach((b) => b.remove());
   closeEditor(true);
 });
-marinara.log.info("발췌기 0.9.29 준비됨");
+marinara.log.info("발췌기 0.9.30 준비됨");
 // 처음 열 때 글꼴을 받느라 몇 초씩 걸리지 않게, 마리나라가 뜬 뒤 쉬는 틈에 미리 받아 둔다
 marinara.setTimeout(() => idle(() => {
   const ids = new Set([S.style.font, S.style.nameFont, ...(S.style.stickers || []).filter((x) => x.type === "text").map((x) => x.font)]);
