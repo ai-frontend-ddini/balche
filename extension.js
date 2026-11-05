@@ -1,4 +1,4 @@
-// 발췌기 v0.8.3
+// 발췌기 v0.9.13
 // 메시지 아래 가위 아이콘 → 그 턴을 꾸며서 이미지로 저장
 // 이미지 변환: html-to-image 1.11.11 (MIT, https://github.com/bubkoo/html-to-image) 내장
 
@@ -19,7 +19,7 @@ const DEFAULT_STYLE = {
   bgMode: "tpl", tpl: "plain-cream", bgColor: "#ffffff", bgKey: "", bgFit: "cover", dim: 0,
   panel: false, panelColor: "#ffffff", panelAlpha: 85, panelRadius: 14, panelPad: 36,
   radius: 0, showName: true, nameStyle: "line", showAvatar: false,
-  title: "", footer: "", divider: "line", showModel: false, modelCustom: "", showMarinara: false, footAlign: "right",
+  title: "", footer: "", divider: "line", showChar: false, showModel: false, modelCustom: "", showMarinara: false, footAlign: "right",
   ratio: "free", scale: 1, decoColor: "#ffe066", texGrain: 0, texCrumple: 0, texKraft: 0,
   tplTheme: "", tplPick: {}, tplPickSide: "left", tplPickCorners: "2", divSize: 0.5, divLen: 60, divAuto: true, divColor: "#999999", stickers: [], hideTplDecos: false,
 };
@@ -307,9 +307,9 @@ const TEMPLATES = [
   { id: "mint-ornament", name: "민트 장식선", outer: "#f2f8f4", paper: "#f2f8f4", rule: ["lines", "#dbe8e0"], pad: [96, 60, 96],
     decos: [["sparkleLine", "tc", 0, 38, 220], ["sparkleLine", "bc", 0, 34, 220]],
     colors: { text: "#34423c", nameColor: "#4b7a66", dialogue: "#3f705c", italic: "#7b8a83" } },
-  { id: "navy-note", name: "네이비 줄노트", outer: "#ffffff", paper: "#ffffff", band: [22, "#1f3a5f"],
+  { id: "navy-note", name: "네이비 줄노트", outer: "#ffffff", paper: "#ffffff", band: [30, "#3a5f8f"], titleRule: true,
     rule: ["lines", "#e3e5e8", "full"], pad: [72, 56, 64], colors: { text: "#2f3237", nameColor: "#1f3a5f", dialogue: "#24497a", italic: "#7d838c" } },
-  { id: "navy-grid", name: "네이비 모눈", outer: "#ffffff", paper: "#ffffff", band: [22, "#1f3a5f"],
+  { id: "navy-grid", name: "네이비 모눈", outer: "#ffffff", paper: "#ffffff", band: [30, "#3a5f8f"], titleRule: true,
     rule: ["grid", "#e5e7ea"], pad: [72, 56, 64], colors: { text: "#2f3237", nameColor: "#1f3a5f", dialogue: "#24497a", italic: "#7d838c" } },
   { id: "spring-grid", name: "스프링 모눈", outer: "#f6f1ea", inset: [40, 26, 26], paper: "#ffffff", radius: 4, border: "1px solid #e4d8c8", rings: "#f6f1ea",
     rule: ["grid", "#e8e2d8"], pad: [54, 46, 46], colors: { text: "#45403a", nameColor: "#7a6a52", dialogue: "#76603f", italic: "#8b847b" } },
@@ -327,7 +327,7 @@ M.folderTab2 = (t) => svgWrap("0 0 210 30",
   `<path d="M1 28.5L15 3H195L209 28.5" fill="${t?.paper || "#f6efb5"}" stroke="${t?.tabColor || "#5e8f62"}" stroke-width="1.6" stroke-linejoin="round"/>`);
 M.navIcons = () => svgWrap("0 0 66 20",
   `<g fill="none" stroke="#3b3346" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 4L3 10L9 16 M25 4L31 10L25 16"/>` +
-  `<path d="M61.5 10A6.5 6.5 0 1 1 55 3.5"/><path d="M52.3 0.8L55 3.5L52.3 6.2"/></g>`);
+  `<path d="M61 10A6 6 0 1 1 55.6 4"/></g><path d="M58.6 4L54.6 1.3V6.7Z" fill="#3b3346" stroke="#3b3346" stroke-width="1" stroke-linejoin="round"/>`);
 M.closeX = () => svgWrap("0 0 20 20", `<path d="M3 3L17 17M17 3L3 17" stroke="#3b3346" stroke-width="3" stroke-linecap="round"/>`);
 M.cloud = () => svgWrap("0 0 150 72",
   `<path d="M14 70C3 70 0 56 8 49C2 38 14 26 27 32C30 16 50 10 62 20C70 4 98 4 104 24C118 18 134 28 130 42C146 44 148 66 132 70Z" fill="#fffaf0" stroke="#3b3346" stroke-width="3" stroke-linejoin="round"/>`);
@@ -738,7 +738,7 @@ function textBoxCss(s, k) {
   }
   css += `color:${s.color || T.color};font-weight:${T.weight || 500};font-style:${T.italic ? "italic" : "normal"};` +
     `padding:${f1(T.pad[0] * fs)}px ${f1(T.pad[1] * fs)}px;width:max-content;max-width:${f1(s.size * k)}px;` +
-    `border-radius:${T.radius === "pill" ? "999px" : f1((T.radius || 0) * k) + "px"};`;
+    `border-radius:${T.radius === "pill" ? f1((fs * 1.35) / 2 + T.pad[0] * fs) + "px" : f1((T.radius || 0) * k) + "px"};`;
   if (T.bg) css += `background:${T.bg};`;
   if (T.border) css += `border:${f1(Math.max(1, T.border[0] * k))}px solid ${T.border[1]};`;
   if (T.shadow) css += `box-shadow:${f1(T.shadow[0] * k)}px ${f1(T.shadow[1] * k)}px 0 ${T.shadow[2]};`;
@@ -818,6 +818,9 @@ const TPL_GROUPS = [
   if (rest.length) TPL_GROUPS.push(["기타", rest]);
 }
 
+// "그림 장식 숨기기"는 그림 장식 묶음의 템플릿에만
+const PIC_DECO_TPLS = new Set(TPL_GROUPS.find((g) => g[0] === "그림 장식")?.[1] || []);
+
 const lineBoxPx = (st) => Math.round(st.fontSize * st.lineHeight);
 
 // 카드 하나에 템플릿을 칠한다 (편집 카드, 미리보기 썸네일 공용)
@@ -834,7 +837,7 @@ function paintTemplate(card, inner, title, st, tpl, hasTitle = true) {
   title.style.cssText = "";
   if (!tpl) {
     inner.style.cssText = "";
-    card.classList.remove("tpl", "ruled");
+    card.classList.remove("tpl", "ruled", "title-rule", "lined");
     card.style.removeProperty("--mx-L");
     return;
   }
@@ -843,6 +846,8 @@ function paintTemplate(card, inner, title, st, tpl, hasTitle = true) {
   const L = lineBoxPx(st);
   card.classList.add("tpl");
   card.classList.toggle("ruled", !!tpl.rule);
+  card.classList.toggle("title-rule", !!tpl.titleRule);
+  card.classList.toggle("lined", tpl.rule?.[0] === "lines");
   card.style.setProperty("--mx-L", L + "px");
 
   // 바깥 (카드)
@@ -897,6 +902,7 @@ function paintTemplate(card, inner, title, st, tpl, hasTitle = true) {
   if (tpl.rule?.[0] === "lines") {
     const c = tpl.rule[1];
     const shift = Math.max(0, Math.round((L - st.fontSize) / 2) - 3);
+    card.style.setProperty("--mx-rs", shift + "px");
     layers.push({ img: `linear-gradient(to bottom, transparent ${L - 1}px, ${c} ${L - 1}px)`, size: `100% ${L}px`, pos: `0 ${-shift}px`, rep: tpl.rule[2] === "full" ? "repeat" : "repeat-y", org: "content-box", clip: tpl.rule[2] === "full" ? "padding-box" : "content-box" });
   }
   if (tpl.rule?.[0] === "grid") {
@@ -995,7 +1001,7 @@ function paintTemplate(card, inner, title, st, tpl, hasTitle = true) {
   if (tpl.tape) add(`position:absolute;top:${P(-14)};left:50%;width:${P(tpl.tape[0])};height:${P(tpl.tape[1])};margin-left:${P(-tpl.tape[0] / 2)};background:${tpl.tape[2]};transform:rotate(-2deg)`);
 
   // 장식 그림
-  for (const [motif, at, x, y, w, flip, mask, op] of st.hideTplDecos ? pickDecos : [...(tpl.decos || []), ...pickDecos]) {
+  for (const [motif, at, x, y, w, flip, mask, op] of st.hideTplDecos && PIC_DECO_TPLS.has(tpl.id) ? pickDecos : [...(tpl.decos || []), ...pickDecos]) {
     let art = "";
     if (ASSETS[motif]) {
       art = document.createElement("img");
@@ -1309,8 +1315,12 @@ function buildSection(msgEl) {
   sec.append(h("div", { class: "mxh", contenteditable: "false" },
     av?.src ? h("img", { class: "mxa", src: av.src, alt: "", contenteditable: "false" }) : null,
     h("span", { class: "mxn" }, name)));
-  const content = msgEl.querySelector(".mari-message-content");
-  const paras = toParas(content);
+  // 번역문이 있으면 번역문만 (외국어로 출력하고 번역해 둔 경우)
+  const tr = [...msgEl.querySelectorAll(".translation-text")].find((e) => e.textContent.trim());
+  // 단체 대화방은 본문 칸 이름이 달라서 말풍선·글 칸을 대신 읽는다
+  const blocks = [...msgEl.querySelectorAll(".mari-message-bubble, .mari-chat-style-text")].filter((e) => !e.parentElement.closest(".mari-message-bubble, .mari-chat-style-text"));
+  const content = tr || msgEl.querySelector(".mari-message-content");
+  const paras = content ? toParas(content) : blocks.flatMap((b) => toParas(b));
   if (!paras.length) paras.push(h("p", null, ""));
   sec.append(h("div", { class: "mx-body", contenteditable: "true", spellcheck: "false", "aria-label": "발췌 본문" }, ...paras));
   markDialogue(sec);
@@ -1361,6 +1371,7 @@ function deferCleanup(fn) {
 }
 function closeEditor(force) {
   if (!UI) return;
+  try { globalThis.CSS?.highlights?.delete("mx-multi"); } catch {}
 
   const closed = UI;
   UI = null;
@@ -1513,52 +1524,82 @@ function unwrap(el) {
   p.normalize();
 }
 
+// 여러 군데 고르기: Ctrl(맥은 Cmd)을 누른 채 드래그하면 앞서 고른 곳이 남아 있다
+function multiRanges() { return (UI?.extra || []).filter((r) => !r.collapsed && bodyRange(r)); }
+function paintMulti() {
+  try {
+    if (!globalThis.CSS?.highlights) return;
+    const rs = multiRanges();
+    if (rs.length) CSS.highlights.set("mx-multi", new Highlight(...rs)); else CSS.highlights.delete("mx-multi");
+  } catch {}
+}
+function clearMulti() { if (UI) UI.extra = []; paintMulti(); }
+function pickedRanges() {
+  const cur = currentRange();
+  const list = multiRanges().filter((r) => !cur || r.compareBoundaryPoints(Range.START_TO_START, cur) !== 0 || r.compareBoundaryPoints(Range.END_TO_END, cur) !== 0);
+  return { cur, list: cur ? [...list, cur] : list };
+}
 function applyDeco(kind) {
-  const r = currentRange();
-  if (!r) return toast("꾸밀 부분을 먼저 드래그해서 골라 주세요.");
-  const parts = textNodesIn(r);
-  if (!parts.length) return;
+  const { cur, list } = pickedRanges();
+  if (!list.length) return toast("꾸밀 부분을 먼저 드래그해서 골라 주세요.");
+  const sets = list.map((r) => ({ r, parts: textNodesIn(r) })).filter((x) => x.parts.length);
+  if (!sets.length) return;
   snap();
+  const allParts = sets.flatMap((x) => x.parts);
   // 이미 같은 꾸미기로 덮여 있으면 끄기
-  const owners = parts.map(({ n }) => n.parentElement.closest(".mxd-" + kind));
+  const owners = allParts.map(({ n }) => n.parentElement.closest(".mxd-" + kind));
   if (owners.every(Boolean)) {
     const set = [...new Set(owners)];
     const first = set[0].firstChild, last = set[set.length - 1].lastChild;
     set.forEach(unwrap);
-    if (first && last && first.isConnected && last.isConnected) selectNodes(first, last);
+    clearMulti();
+    if (sets.length === 1 && first && last && first.isConnected && last.isConnected) selectNodes(first, last);
     return;
   }
   const color = S.style.decoColor;
   // 문단마다 한 덩어리로 감싸서 안에 다른 꾸미기가 있어도 테두리·형광펜이 끊기지 않게
   const blockOf = (n) => n.parentElement.closest("p, .mxh, li") || n.parentElement;
-  const groups = [];
-  for (const part of parts) {
-    const b = blockOf(part.n);
-    const g = groups[groups.length - 1];
-    if (g && g.block === b) g.last = part;
-    else groups.push({ block: b, first: part, last: part });
-  }
-  const made = [];
-  for (const g of groups) {
-    const sub = document.createRange();
-    sub.setStart(g.first.n, g.first.start);
-    sub.setEnd(g.last.n, g.last.end);
-    const frag = sub.extractContents();
-    const span = h("span", { class: "mxd mxd-" + kind, style: `--xc:${color}` });
-    span.append(frag);
-    sub.insertNode(span);
-    made.push(span);
+  // 뒤쪽 범위부터 감싸야 앞쪽 글자 위치가 흐트러지지 않는다
+  sets.sort((a, b) => b.r.compareBoundaryPoints(Range.START_TO_START, a.r));
+  const madeBy = new Map();
+  for (const { r, parts } of sets) {
+    const groups = [];
+    for (const part of parts) {
+      const b = blockOf(part.n);
+      const g = groups[groups.length - 1];
+      if (g && g.block === b) g.last = part;
+      else groups.push({ block: b, first: part, last: part });
+    }
+    const made = [];
+    for (const g of groups.reverse()) {
+      const sub = document.createRange();
+      sub.setStart(g.first.n, g.first.start);
+      sub.setEnd(g.last.n, g.last.end);
+      const frag = sub.extractContents();
+      const span = h("span", { class: "mxd mxd-" + kind, style: `--xc:${color}` });
+      span.append(frag);
+      sub.insertNode(span);
+      made.unshift(span);
+    }
+    madeBy.set(r, made);
   }
   UI.doc.querySelectorAll(".mxd:empty, .mxq:empty, em:empty, strong:empty").forEach((e) => e.remove());
-  selectNodes(made[0], made[made.length - 1]);
+  // 다시 누르면 같은 곳들이 한꺼번에 꺼지도록 고른 상태를 그대로 남긴다
+  const spanRange = (m) => { const x = document.createRange(); x.setStartBefore(m[0]); x.setEndAfter(m[m.length - 1]); return x; };
+  const keep = sets.map((x) => x.r).filter((r) => r !== cur && madeBy.get(r)?.[0]?.isConnected).map((r) => spanRange(madeBy.get(r)));
+  UI.extra = keep;
+  paintMulti();
+  const main = madeBy.get(cur) || madeBy.get(sets[0].r);
+  if (main?.length && main[0].isConnected) selectNodes(main[0], main[main.length - 1]);
 }
 function clearDeco() {
-  const r = currentRange();
-  if (!r) return toast("지울 부분을 먼저 드래그해서 골라 주세요.");
-  const spans = [...UI.root.querySelectorAll(".mxc-pageframe .mxd, .mxc-box .mxd")].filter((s) => r.intersectsNode(s));
+  const { list } = pickedRanges();
+  if (!list.length) return toast("지울 부분을 먼저 드래그해서 골라 주세요.");
+  const spans = [...UI.root.querySelectorAll(".mxc-pageframe .mxd, .mxc-box .mxd")].filter((s) => list.some((r) => r.intersectsNode(s)));
   if (!spans.length) return toast("고른 부분에 꾸미기가 없어요.");
   snap();
   spans.reverse().forEach(unwrap);
+  clearMulti();
 }
 // 구분선 넣기: 마지막으로 누른 자리 바로 뒤의 빈 줄에 넣는다
 //  · 문단 안 빈 줄(줄바꿈 두 번) → 그 줄을 구분선으로 바꾸고 문단을 나눔
@@ -1645,7 +1686,36 @@ function prettyModel(raw) {
 function modelText() {
   return (S.style.modelCustom || "").trim() || UI?.model || "";
 }
+// 1) 마리나라가 화면에 모델 이름을 띄워 둔 경우 그걸 읽고  2) 그 메시지 하나의 스와이프 기록에서 찾고
+// 3) 그래도 없으면 예전처럼 최근 메시지부터 거슬러 올라가며 찾는다
+async function quickModel(ids) {
+  for (const id of ids) {
+    const el = document.querySelector(`[data-message-id="${CSS.escape(id)}"]`);
+    const label = el?.querySelector("span.italic.truncate[title]")?.getAttribute("title");
+    if (label) return prettyModel(label.split(" · ")[0].trim());
+  }
+  const chatId = document.querySelector("[data-chat-composer][data-chat-id]")?.getAttribute("data-chat-id")
+    || document.querySelector("textarea[data-chat-id]")?.getAttribute("data-chat-id");
+  if (!chatId) return "";
+  const headers = {};
+  try { const sec = localStorage.getItem("marinara_admin_secret")?.trim(); if (sec) headers["X-Admin-Secret"] = sec; } catch {}
+  for (const id of ids.slice(0, 3)) {
+    try {
+      const r = await marinara.fetch(`/api/chats/${encodeURIComponent(chatId)}/messages/${encodeURIComponent(id)}/swipes`, { headers });
+      if (!r.ok) continue;
+      const rows = await r.json();
+      for (const sw of Array.isArray(rows) ? rows : []) {
+        let ex = sw.extra;
+        if (typeof ex === "string") { try { ex = JSON.parse(ex); } catch { ex = null; } }
+        if (ex?.generationInfo?.model) return prettyModel(ex.generationInfo.model);
+      }
+    } catch {}
+  }
+  return "";
+}
 async function detectModel(ids) {
+  const quick = await quickModel(ids).catch(() => "");
+  if (quick) return quick;
   const chatId = document.querySelector("[data-chat-composer][data-chat-id]")?.getAttribute("data-chat-id")
     || document.querySelector("textarea[data-chat-id]")?.getAttribute("data-chat-id");
   if (!chatId || !ids.length) return "";
@@ -1673,10 +1743,16 @@ async function detectModel(ids) {
   }
   return "";
 }
-function refreshModel() {
+// 모델 이름은 맺음말에 넣기로 했을 때만 찾는다 (직접 쓴 이름이 있으면 안 찾음)
+function refreshModel(force) {
+  if (!UI || UI.model || S.style.modelCustom || !S.style.showModel) return;
   const ids = [...UI.doc.querySelectorAll("section.mxs")].filter((s) => s.dataset.role !== "user").map((s) => s.dataset.mid);
+  const key = ids.join(",");
+  if (!force && UI.modelTried === key) return;
+  UI.modelTried = key;
+  const owner = UI;
   detectModel(ids).then((m) => {
-    if (!UI || !m) return;
+    if (UI !== owner || !m) return;
     UI.model = m;
     applyStyle();
     const inp = UI.side.querySelector(".mxc-modelin");
@@ -1737,6 +1813,7 @@ function paintTexture(card, st) {
 // 스타일 반영
 function applyStyle() {
   const st = S.style, card = UI.card, c = card.style;
+  if (st.showModel && !UI.model && !st.modelCustom) refreshModel();
   const vars = {
     "--mx-w": st.width + "px", "--mx-fs": st.fontSize + "px", "--mx-lh": st.lineHeight,
     "--mx-ls": st.letter + "em", "--mx-pg": st.paraGap + "em", "--mx-pad": st.padding + "px",
@@ -1782,6 +1859,10 @@ function applyStyle() {
   UI.title.textContent = st.title;
   UI.title.hidden = !st.title;
   const parts = [];
+  if (st.showChar) {
+    const names = [...new Set([...UI.doc.querySelectorAll("section.mxs")].filter((s) => s.dataset.role !== "user").map((s) => (s.querySelector(".mxn")?.textContent || "").trim()).filter(Boolean))];
+    if (names.length) parts.push([names.join(", "), "mx-char"]);
+  }
   if (st.footer) parts.push([st.footer, ""]);
   if (st.showModel && modelText()) parts.push([modelText(), "mx-model"]);
   if (st.showMarinara) parts.push(["MARINARA", "mx-brand"]);
@@ -1906,7 +1987,7 @@ function nameFields() {
       type: "text", class: "mxc-txt", "aria-label": label, value: name?.textContent || "",
       onchange: (e) => {
         if (UI !== owner || !name || name.textContent === e.target.value) return;
-        snap(); name.textContent = e.target.value;
+        snap(); name.textContent = e.target.value; applyStyle();
       },
     }));
   });
@@ -1995,6 +2076,7 @@ async function renderTab() {
           return ta;
         })())),
       group("맺음말",
+        row("캐릭터 이름 넣기", ctlToggle("showChar")),
         row("직접 쓰기", ctlText("footer", "예: 작성자, 날짜")),
         row("모델 이름 넣기", ctlToggle("showModel")),
         row("모델 이름", (() => {
@@ -2163,7 +2245,7 @@ async function renderTab() {
       h("p", { class: "mxc-note" }, "이 메시지 앞뒤로 내용을 더 불러올 수 있어요."),
       h("div", { class: "mxc-msglist" }, secs.map((s) => h("div", { class: "mxc-msg" },
         h("input", { class: "mxc-txt mxc-msgname", type: "text", "aria-label": "표시 이름", value: s.querySelector(".mxn")?.textContent || "",
-          onchange: (e) => { if (UI !== owner) return; snap(); const name = s.querySelector(".mxn"); if (name) name.textContent = e.target.value; } }),
+          onchange: (e) => { if (UI !== owner) return; snap(); const name = s.querySelector(".mxn"); if (name) name.textContent = e.target.value; applyStyle(); } }),
         h("span", { class: "mxc-msgtext" }, [...s.querySelectorAll("p")].map((p) => p.textContent).join(" ").slice(0, 60)),
         h("button", { type: "button", class: "mxc-x", title: "이 메시지 빼기", onclick: () => {
           if (UI.doc.querySelectorAll("section.mxs").length <= 1) return toast("메시지가 하나는 있어야 해요.");
@@ -2320,7 +2402,7 @@ async function stickerTab(body) {
   const tile = (src, title, onclick, onx) => h("div", { class: "mxc-bgitem" },
     h("button", { type: "button", class: "mxc-bgpick", title, onclick }, h("img", { src, alt: title, style: "object-fit:contain" })),
     onx ? h("button", { type: "button", class: "mxc-x", title: "지우기", onclick: onx }, "×") : null);
-  const grid = h("div", { class: "mxc-bggrid mxc-stkgrid" },
+  const grid = h("div", { class: "mxc-bggrid mxc-stkgrid mxc-stklib" },
     ["heart_big", "heart_small"].filter((n) => ASSETS[n]).map((n) => tile(ASSETS[n].d, ASSETS[n].l + " 붙이기",
       () => add({ key: "b:" + n, at: "mc", size: n === "heart_big" ? 110 : 60, x: 0, y: 0, rot: 0, flip: false }))),
     lib.map((r) => tile(stickerCache.get(r.key)?.url || "", r.name + " 붙이기",
@@ -2331,7 +2413,7 @@ async function stickerTab(body) {
         stickerCache.delete(r.key);
         S.style.stickers = placed.filter((p) => p.key !== r.key); persist(); applyStyle(); renderTab();
       })),
-    h("button", { type: "button", class: "mxc-bgadd", onclick: () => up.click() }, "+ 내 그림"), up);
+    h("button", { type: "button", class: "mxc-bgadd", title: "내 그림 추가", "aria-label": "내 그림 추가", onclick: () => up.click() }, "+"), up);
 
   const objSlider = (obj, key, min, max, step) => {
     const rng = h("input", { type: "range", min, max, step, value: obj[key] ?? min });
@@ -2352,11 +2434,16 @@ async function stickerTab(body) {
       const ta = h("textarea", { class: "mxc-txt mxc-titlearea", rows: 2, placeholder: "글자를 입력해요 (이모지도 돼요)" });
       ta.value = s.text || "";
       ta.addEventListener("input", () => { s.text = ta.value; upd(); });
+      const tplOpts = Object.entries(TEXT_TPLS).map(([id, T]) => [id, T.name]);
+      if (!TEXT_TPLS[s.tpl]) tplOpts.unshift([s.tpl || "", "텍스트 상자"]);
+      const tplSel = pick(tplOpts, s.tpl || "", (v) => { s.tpl = v; persist(); applyStyle(); renderTab(); });
+      tplSel.classList.add("mxc-tplsel");
+      tplSel.title = "템플릿 바꾸기";
       const more = h("details", { class: "mxc-more" }, h("summary", null, "폰트 설정"),
         row("글꼴", pick(fontOpts, s.font || "pretendard", (v) => { s.font = v; ensureFont(v).catch(() => {}).finally(upd); })),
         row("글자 크기", objSlider(s, "fs", 10, 120, 1)),
         row("글자색", color(s.color || TEXT_TPLS[s.tpl]?.color || "#111111", (v) => { s.color = v; upd(); })));
-      return h("div", { class: "mxc-subgroup" }, h("div", { class: "mxc-msg" }, h("span", { class: "mxc-msgname" }, TEXT_TPLS[s.tpl]?.name || "텍스트 상자"), h("span", { class: "mxc-msgtext" }), remove), ta, more);
+      return h("div", { class: "mxc-subgroup" }, h("div", { class: "mxc-msg" }, tplSel, remove), ta, more);
     }
     const d = stickerData(s.key);
     return h("div", { class: "mxc-msg" },
@@ -2690,7 +2777,7 @@ function showLoader() {
   const icon = LOAD_ICONS[Math.floor(Math.random() * LOAD_ICONS.length)];
   loaderEl = h("div", { class: "mxc-loader", role: "status", "aria-live": "polite" },
     h("div", { class: "mxc-loadcard" }, h("img", { src: icon, alt: "" }), h("span", null, "발췌기를 준비하고 있어요…")));
-  document.body.append(loaderEl);
+  document.documentElement.append(loaderEl);
 }
 function hideLoader() { loaderEl?.remove(); loaderEl = null; }
 function openEditor(msgEl) {
@@ -2700,7 +2787,9 @@ function openEditor(msgEl) {
     const t0 = performance.now();
     try {
       openEditorNow(msgEl);
+      const t1 = performance.now();
       if (UI) { UI.root.style.visibility = "hidden"; await warmUp(UI); }
+      marinara.log.info(`[발췌기] 열기 ${Math.round(performance.now() - t0)}ms (메시지 읽기 ${Math.round(t1 - t0)} · 준비 ${UI?.warmLog || "-"} · 화면 메시지 ${document.querySelectorAll("[data-message-id]").length}개)`);
     } catch (e) {
       marinara.log.error(e);
     } finally {
@@ -2708,29 +2797,47 @@ function openEditor(msgEl) {
       if (wait > 0) await new Promise((r) => setTimeout(r, wait));
       if (UI) UI.root.style.visibility = "";
       hideLoader();
+      if (UI) warmThumbs(UI);
     }
   }));
+}
+// 배경 탭 견본(템플릿 70여 개)은 창이 뜬 뒤 쉬는 틈에 조금씩 만들어 둔다
+const idle = (fn) => (globalThis.requestIdleCallback ? requestIdleCallback(fn, { timeout: 1000 }) : setTimeout(fn, 40));
+function warmThumbs(ui) {
+  const list = TEMPLATES.slice();
+  const step = (dl) => {
+    const until = performance.now() + 8;
+    while (list.length && UI === ui && (dl?.timeRemaining ? dl.timeRemaining() > 3 : performance.now() < until)) {
+      try { cachedThumb(themed(list.shift(), S.style.tplTheme), S.style); } catch {}
+    }
+    if (list.length && UI === ui) idle(step);
+  };
+  idle(step);
 }
 // 처음 열 때 무거운 일을 미리: 글꼴 → 페이지 나누기 → 탭과 그림을 한 번씩 그려 두기
 async function warmUp(ui) {
   const lim = (p, ms) => Promise.race([p, new Promise((r) => setTimeout(r, ms))]);
-  const decodeIn = (el) => lim(Promise.allSettled([...el.querySelectorAll("img")].filter((i) => i.loading !== "lazy").map((i) => i.decode?.())), 2500);
+  const decodeIn = (el) => lim(Promise.allSettled([...el.querySelectorAll("img")].filter((i) => i.loading !== "lazy").map((i) => i.decode?.())), 600);
   const ids = [...new Set([S.style.font, S.style.nameFont, ...(S.style.stickers || []).filter((x) => x.type === "text").map((x) => x.font)])].filter((id) => id && id !== "system" && id !== "local");
+  const w0 = performance.now();
   await lim(Promise.allSettled(ids.map(ensureFont)), 4000);
-  await lim(document.fonts.ready, 1500);
   if (UI !== ui) return;
+  const w1 = performance.now();
   marinara.clearTimeout(ui.pageTimer);
   ui.pagesDirty = true;
   refreshPages();
+  const wp = performance.now();
   await decodeIn(ui.pageList);
+  const w2 = performance.now();
   const start = ui.tab;
-  for (const t of ["layout", "bg", "stickers", start]) {
+  for (const t of [...new Set(["layout", start])]) {
     if (UI !== ui) return;
     ui.tab = t;
     await renderTab();
     await decodeIn(ui.side);
     await new Promise((r) => setTimeout(r, 0));
   }
+  ui.warmLog = `글꼴 ${Math.round(w1 - w0)} · 페이지 ${Math.round(wp - w1)}(${ui.pages?.length || 0}장, 문단 ${ui.doc.querySelectorAll("p").length}개, ${ui.doc.textContent.length}자) · 그림 ${Math.round(w2 - wp)} · 탭 ${Math.round(performance.now() - w2)}`;
 }
 function openEditorNow(msgEl) {
   closeEditor(true);
@@ -2915,6 +3022,15 @@ function openEditorNow(msgEl) {
   });
   editorEvents.addEventListener("drop", (e) => e.preventDefault());
   // 구분선: 누르면 골라지고, 지우기 키로 지움. 구분선 바로 뒤/앞에서 지우기 키를 눌러도 지움
+  editorEvents.addEventListener("pointerdown", (e) => {
+    if (e.button !== 0) return;
+    if (e.ctrlKey || e.metaKey) {
+      const sel = getSelection();
+      const r = sel.rangeCount ? sel.getRangeAt(0) : UI.savedRange;
+      if (r && !r.collapsed && bodyRange(r)) { (UI.extra ||= []).push(r.cloneRange()); paintMulti(); }
+    } else if (!e.shiftKey) clearMulti();
+  }, true);
+  editorEvents.addEventListener("keydown", (e) => { if (e.key === "Escape" && UI?.extra?.length) clearMulti(); });
   editorEvents.addEventListener("mousedown", (e) => {
     if (e.target.nodeName !== "HR") return;
     e.preventDefault();
@@ -2963,7 +3079,8 @@ function openEditorNow(msgEl) {
   });
   root.addEventListener("click", (e) => { if (e.target === root) closeEditor(false); });
 
-  document.body.append(root);
+  // body 바깥(html 바로 아래)에 붙여서, 채팅 화면을 지켜보는 마리나라 쪽 감시가 발췌창 변화마다 깨어나지 않게
+  document.documentElement.append(root);
   try { document.execCommand("defaultParagraphSeparator", false, "p"); } catch {}
   UI.pageObserver = new MutationObserver(() => { if (!UI || UI.stkDrag) return; UI.pageEdits = true; schedulePages(); });
   // 슬라이더를 끄는 동안에는 페이지를 다시 나누지 않고, 손을 뗀 뒤 한 번만
@@ -3039,4 +3156,9 @@ marinara.onCleanup(() => {
   document.querySelectorAll(".mxc-act").forEach((b) => b.remove());
   closeEditor(true);
 });
-marinara.log.info("발췌기 0.7.0 준비됨");
+marinara.log.info("발췌기 0.9.13 준비됨");
+// 처음 열 때 글꼴을 받느라 몇 초씩 걸리지 않게, 마리나라가 뜬 뒤 쉬는 틈에 미리 받아 둔다
+marinara.setTimeout(() => idle(() => {
+  const ids = new Set([S.style.font, S.style.nameFont, ...(S.style.stickers || []).filter((x) => x.type === "text").map((x) => x.font)]);
+  for (const id of ids) ensureFont(id).catch(() => {});
+}), 2000);

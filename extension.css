@@ -12,6 +12,7 @@
   position: fixed;
   inset: 0;
   z-index: 2147483000;
+  contain: strict;
   background: rgba(0, 0, 0, 0.55);
   display: flex;
   align-items: center;
@@ -370,6 +371,14 @@
   font-size: 1em;
 }
 .mx-card.ruled.name-tag .mxn { font-size: 0.9em; line-height: 1.5; }
+/* 줄·모눈 종이에서는 가는 밑줄이 줄선에 묻혀서 굵게 */
+.mx-card.ruled:not(.lined).name-line .mxh { box-shadow: inset 0 -2px 0 color-mix(in srgb, var(--mx-name) 60%, transparent); }
+/* 줄노트: 이름 칸 아래 줄선 자리에 그대로 2px로 */
+.mx-card.lined.name-line .mxh {
+  background: linear-gradient(color-mix(in srgb, var(--mx-name) 60%, transparent), color-mix(in srgb, var(--mx-name) 60%, transparent)) no-repeat 0 calc(var(--mx-L) - 2px - var(--mx-rs, 0px)) / 100% 2px;
+}
+/* 네이비 줄노트·모눈: 제목 밑줄 */
+.mx-card.title-rule .mx-title { text-decoration: underline 2.5px color-mix(in srgb, var(--mx-name) 85%, transparent); text-underline-offset: 0.3em; text-decoration-skip-ink: none; }
 .mx-card.ruled .mxa { width: calc(var(--mx-L) - 6px); height: calc(var(--mx-L) - 6px); }
 .mx-card.ruled .mxs + .mxs, .mx-card.ruled .mx-doc > hr + .mxs, .mx-card.ruled .mxs + hr { margin-top: var(--mx-L); }
 .mx-card.ruled .mx-doc hr {
@@ -514,7 +523,7 @@
   .mxc-tools .mxc-toolrow2 > .mxc-sws { flex: 1 1 100%; border-right: 0; padding-right: 0; margin-right: 0; }
 }
 /* 로딩 화면 (움직임 없음) */
-.mxc-loader { position: fixed; inset: 0; z-index: 2147483001; display: flex; align-items: center; justify-content: center; background: rgba(0, 0, 0, 0.45); }
+.mxc-loader { position: fixed; inset: 0; contain: strict; z-index: 2147483001; display: flex; align-items: center; justify-content: center; background: rgba(0, 0, 0, 0.45); }
 .mxc-loadcard {
   display: flex; flex-direction: column; align-items: center; gap: 12px; padding: 22px 30px 20px;
   background: var(--background, #1b1b23); color: var(--foreground, #e9e9ee); border: 1px solid var(--border, rgba(255,255,255,.12));
@@ -579,3 +588,20 @@
 .mxc-txtplbtn:hover { border-color: var(--mxc-acc); }
 .mxc-txtplbtn:focus-visible { outline: 2px solid var(--mxc-acc); outline-offset: 2px; }
 .mxc-txtprev { display: inline-block; pointer-events: none; }
+
+.mxc-msg .mxc-tplsel { flex: 1; min-width: 0; }
+/* 스티커 목록은 작게 (한 줄 6칸) */
+.mxc-stklib { grid-template-columns: repeat(6, 1fr); gap: 4px; }
+.mxc-stklib .mxc-bgitem { border-radius: 5px; }
+.mxc-stklib .mxc-bgpick img { padding: 2px; }
+.mxc-stklib .mxc-bgadd { font-size: 18px; padding: 0; }
+.mxc-stklib .mxc-bgitem .mxc-x { top: 1px; right: 1px; transform: scale(0.8); transform-origin: top right; }
+/* 텍스트 상자 묶음 안에서는 줄 테두리 없이 */
+.mxc-subgroup > .mxc-msg { border: 0; padding: 0; }
+.mxc-subgroup > .mxc-msg > .mxc-x { margin-left: auto; }
+/* 줄노트: 프사를 줄과 줄 사이 가운데로 */
+.mx-card.lined .mxa { width: calc(var(--mx-L) - 8px); height: calc(var(--mx-L) - 8px); transform: translateY(calc(-1 * var(--mx-rs, 0px) - 0.5px)); }
+/* 줄노트: 이름도 프사와 같은 높이로 */
+.mx-card.lined .mxh > .mxn { display: inline-block; transform: translateY(calc(-1 * var(--mx-rs, 0px) - 0.5px)); }
+/* Ctrl·Cmd 드래그로 여러 군데 고른 곳 */
+::highlight(mx-multi) { background-color: Highlight; color: HighlightText; }
