@@ -1,0 +1,7 @@
+[
+  {"id": "mint-tag", "name": "민트 태그", "sample": "mint", "bg": "#cdeee2", "border": [1.5, "#8fd1b8"], "radius": 10, "color": "#2f6f58", "pad": [0.3, 0.9], "font": "dangam"},
+  {"id": "lilac-pill", "name": "보라 알약", "sample": "lilac", "bg": "#e4dcf6", "radius": "pill", "color": "#4a3f73", "weight": 700, "pad": [0.35, 1.1], "shadow": [3, 4, "#f7c3d4"], "font": "galmuri"},
+  {"id": "orange-sticker", "name": "귤 스티커 글씨", "sample": "yummy!", "color": "#f08a24", "weight": 800, "outline": [0.16, "#ffffff"], "pad": [0.25, 0.45], "font": "leferi", "fs": 32},
+  {"id": "serif-label", "name": "명조 라벨", "sample": "No. 07", "bg": "#fffdf6", "border": [1, "#111111"], "radius": 0, "color": "#111111", "weight": 700, "pad": [0.3, 0.9], "font": "bookk"},
+  {"id": "dot-bubble", "name": "도트 말풍선", "sample": "오늘도 수고했어", "bg": "#ffffff", "border": [1.5, "#8fa8c4"], "radius": 4, "color": "#4a5566", "weight": 400, "pad": [0.35, 0.9], "font": "mona"}
+]
